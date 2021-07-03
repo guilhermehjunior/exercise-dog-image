@@ -7,24 +7,46 @@ class DogPic extends React.Component {
     super(props);
     this.state = {
       loading: true,
-      dogPic: undefined,
+      dogPic: '',
     }
+    this.fecthDog = this.fecthDog.bind(this);
   }
 
-  async componentDidMount() {
+  fecthDog() {
+    this.setState({loading: true}, async () => {
     const response = await fetch(URL);
     const doguinho = await response.json();
     this.setState({
-      dogPic: <img src={doguinho.message} alt="foto doguim"/>,
+      dogPic: doguinho.message,
       loading: false,
-    })
+    },() => {
+      const breed = doguinho.message.match(/https:\/\/images\.dog\.ceo\/breeds\/(\w+)/);
+      alert(breed[1]);
+    });
+    localStorage.setItem('dogPic', doguinho.message);
+  })
+  }
+
+  componentDidMount() {
+    this.fecthDog();
+  }
+
+  shouldComponentUpdate(_nextProps, nextState) {
+    if(nextState.dogPic && nextState.dogPic.includes('terrier')) {
+      return false;
+    }
+    return true;
   }
 
   render() {
+    const { dogPic, loading } = this.state;
     return (
       <div>
         <h1>Foto de doguinho!</h1>
-        {this.state.loading ? 'Loading...' : this.state.dogPic}
+        <p>
+          { loading ? 'Loading...' : <img src={dogPic} alt="foto doguim"/> }
+        </p>
+        <button onClick={ this.fecthDog }>Outro doguinho!</button>
       </div>
     );
   }
