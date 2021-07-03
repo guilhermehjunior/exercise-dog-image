@@ -8,8 +8,12 @@ class DogPic extends React.Component {
     this.state = {
       loading: true,
       dogPic: '',
+      dogName: '',
+      infos: [],
     }
     this.fecthDog = this.fecthDog.bind(this);
+    this.onChangeHandle = this.onChangeHandle.bind(this);
+    this.onClickHandle = this.onClickHandle.bind(this);
   }
 
   fecthDog() {
@@ -19,12 +23,24 @@ class DogPic extends React.Component {
     this.setState({
       dogPic: doguinho.message,
       loading: false,
-    },() => {
+    }, () => {
       const breed = doguinho.message.match(/https:\/\/images\.dog\.ceo\/breeds\/(\w+)/);
       alert(breed[1]);
     });
     localStorage.setItem('dogPic', doguinho.message);
   })
+  }
+
+  onChangeHandle(event) {
+    this.setState({dogName: event.target.value})
+  }
+
+  onClickHandle() {
+    this.setState((prevState) => ({
+      infos: [...prevState.infos,[this.state.dogPic, this.state.dogName]]
+    }), () => {
+      localStorage.setItem('dogs', this.state.infos);
+    });
   }
 
   componentDidMount() {
@@ -47,6 +63,8 @@ class DogPic extends React.Component {
           { loading ? 'Loading...' : <img src={dogPic} alt="foto doguim"/> }
         </p>
         <button onClick={ this.fecthDog }>Outro doguinho!</button>
+        <input type="text" placeholder="Nome do doguinho" onChange={ this.onChangeHandle } />
+        <button onClick={ this.onClickHandle }>Salvar doguinho!</button>
       </div>
     );
   }
