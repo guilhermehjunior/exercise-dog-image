@@ -39,12 +39,21 @@ class DogPic extends React.Component {
     this.setState((prevState) => ({
       infos: [...prevState.infos,[this.state.dogPic, this.state.dogName]]
     }), () => {
-      localStorage.setItem('dogs', this.state.infos);
+      localStorage.setItem('dogs', this.state.dogPic);
     });
   }
 
   componentDidMount() {
-    this.fecthDog();
+    const dog = localStorage.getItem('dogs');
+    console.log(dog);
+    if(dog) {
+      this.setState({
+        dogPic: dog,
+        loading: false,
+      });
+    } else {
+      this.fecthDog();
+    }
   }
 
   shouldComponentUpdate(_nextProps, nextState) {
