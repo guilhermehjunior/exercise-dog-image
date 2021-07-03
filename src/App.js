@@ -1,12 +1,12 @@
 import React from 'react';
-import logo from './logo.svg';
+import DogPic from './Components/DogPic'
 import './App.css';
 
-class App extends React.Componente {
+class App extends React.Component {
   render() {
     return (
       <div className="App">
-      
+        <DogPic />
       </div>
     );
   }
