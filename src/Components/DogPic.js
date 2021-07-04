@@ -27,7 +27,6 @@ class DogPic extends React.Component {
       const breed = doguinho.message.match(/https:\/\/images\.dog\.ceo\/breeds\/(\w+)/);
       alert(breed[1]);
     });
-    localStorage.setItem('dogPic', doguinho.message);
   })
   }
 
@@ -36,20 +35,21 @@ class DogPic extends React.Component {
   }
 
   onClickHandle() {
-    this.setState((prevState) => ({
-      infos: [...prevState.infos,[this.state.dogPic, this.state.dogName]]
-    }), () => {
-      localStorage.setItem('dogs', this.state.dogPic);
+    this.setState({
+      infos: [this.state.dogPic, this.state.dogName]
+    }, () => {
+      localStorage.setItem('dogs', JSON.stringify(this.state.infos));
     });
   }
 
   componentDidMount() {
-    const dog = localStorage.getItem('dogs');
+    const dog = JSON.parse(localStorage.getItem('dogs'));
     console.log(dog);
     if(dog) {
       this.setState({
-        dogPic: dog,
+        dogPic: dog[0],
         loading: false,
+        dogName: dog[1],
       });
     } else {
       this.fecthDog();
